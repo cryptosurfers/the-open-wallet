@@ -1,28 +1,37 @@
 <script lang="ts">
-  import Portal from 'svelte-portal/src/Portal.svelte'
-  import { fade } from 'svelte/transition'
-  import { createEventDispatcher } from 'svelte'
+  import Portal from 'svelte-portal/src/Portal.svelte';
+  import { fade } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  export let z_index = 100
-  export let empty = false
-  export let emptyDesc = false
-  export let title = ''
-  export let open = false
-  export let width = '40rem'
-  export let fullScreen = false
-  export let close: () => void = () => { 
-    open = false; 
+  export let z_index = 100;
+  export let empty = false;
+  export let emptyDesc = false;
+  export let title = '';
+  export let open = false;
+  export let width = '40rem';
+  export let fullScreen = false;
+  export let close: () => void = () => {
+    open = false;
     dispatch('modalClosed');
-  }
+  };
 </script>
 
 {#if open}
   <Portal>
-    <div transition:fade={{ duration: 100 }} class="wrapper" style="--modal-width: {width}; z-index: {z_index};">
+    <div
+      transition:fade={{ duration: 100 }}
+      class="wrapper"
+      style="--modal-width: {width}; z-index: {z_index};"
+    >
       <div class="overlay" on:click={close} />
-      <div class="modal" class:full={fullScreen} class:modal--empty-desc={emptyDesc} class:modal--empty={empty}>
+      <div
+        class="modal"
+        class:full={fullScreen}
+        class:modal--empty-desc={emptyDesc}
+        class:modal--empty={empty}
+      >
         <slot name="prepend" />
         <div>
           {#if title && !empty}
@@ -63,10 +72,11 @@
   .modal {
     overflow-y: auto;
     position: absolute;
+
     top: 50%;
     left: 50%;
     width: var(--modal-width);
-    max-width: 95%;
+    max-width: 85%;
     max-height: calc(100vh - 1rem);
     padding: 32px 16px;
     background-color: #fff;

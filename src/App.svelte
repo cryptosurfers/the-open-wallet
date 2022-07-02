@@ -12,7 +12,7 @@
   import Input from './components/Input.svelte';
   import ActionModal from './components/modals/ActionModal.svelte';
   import EnterPasswordModal from './components/modals/EnterPasswordModal.svelte';
-
+  import TonWeb from '../node_modules/tonweb/dist/tonweb';
   import { controller, Controller } from './lib/Controller';
   export let name: string | string;
 
@@ -30,34 +30,40 @@
   let isChangePassword = false;
 
   let createStep: 1 | 2 | 3 = 1;
-  const TonWeb = window.TonWeb;
+
   const providerUrl = 'https://testnet.toncenter.com/api/v2/jsonRPC'; // TON HTTP API url. Use this url for testnet
   const apiKey =
     '36a585cf3e99d3c844e448b495c7b2f66bd279d4f4782540e1cf01ffa8833c50';
-
+  const OldTon = window.TonWeb;
   const walletVersion = 'v3R2';
   const ton = new TonWeb(new TonWeb.HttpProvider(providerUrl, { apiKey }));
+  const oldTon = new OldTon(new TonWeb.HttpProvider(providerUrl, { apiKey }));
   const tg = window.Telegram.WebApp;
   const nacl = TonWeb.utils.nacl;
-
+  $: console.log(keyPair);
   const loadInfo = async () => {
     const privateKey = await Controller.wordsToPrivateKey(myMnemonicWords);
     keyPair = nacl.sign.keyPair.fromSeed(
       TonWeb.utils.base64ToBytes(privateKey)
     );
-    const WalletClass = ton.wallet.all[walletVersion];
-    walletContract = new WalletClass(ton.provider, {
-      publicKey: keyPair.publicKey,
-      wc: 0,
-    });
-    wallet = (await walletContract.getAddress()).toString(true, true, true);
+
+    wallet = (
+      await ton.wallet
+        .create({
+          publicKey: keyPair.publicKey,
+        })
+        .getAddress()
+    ).toString(true, true, true);
+    console.log(keyPair.publicKey);
 
     const walletInfo = await ton.provider.getWalletInfo(wallet);
-    walletBalance = controller.getBalance(walletInfo);
+    walletBalance = TonWeb.utils.fromNano(
+      await controller.getBalance(walletInfo)
+    );
   };
 
   const onCreateClick = async () => {
-    myMnemonicWords = await TonWeb.mnemonic.generateMnemonic();
+    myMnemonicWords = await OldTon.mnemonic.generateMnemonic();
     console.log(myMnemonicWords);
 
     await loadInfo();
@@ -85,7 +91,7 @@
       await loadInfo();
 
       passwordModalOpen = false;
-
+      console.log(keyPair);
       const queryObject = getQueryObject() as BotQuery;
       if (
         queryObject.action == 'createPaymentChannel' ||
@@ -118,6 +124,7 @@
   <div class="error">{error}</div>
   {#if screen == 'LOGIN'}
     <h2>The Open Wallet</h2>
+
     {#if wallet}
       <div class="info-box">
         <p class="info">
@@ -133,7 +140,7 @@
           {/if}
         </p>
 
-        <p class="info">balance: {walletBalance}</p>
+        <p class="info">balance: {walletBalance ?? 'Loading...'}</p>
       </div>
       {#if isChangePassword}
         <h2>Change Pin-Code</h2>
@@ -165,24 +172,24 @@
           }}>Change Pin-Code</Button
         >
       {/if}
-      <Button
-        type="default"
-        wide
-        on:click={() => {
-          tg.sendData(
-            JSON.stringify({
-              wallet,
-              publicKey: keyPair?.publicKey,
-              walletBalance,
-              action: 'walletDeleted',
-            })
-          );
-          storage.clear();
-          screen = 'WELCOME';
-          createStep = 1;
-        }}>Delete Wallet</Button
-      >
     {/if}
+    <Button
+      type="default"
+      wide
+      on:click={() => {
+        tg.sendData(
+          JSON.stringify({
+            wallet,
+            publicKey: keyPair?.publicKey,
+            walletBalance,
+            action: 'walletDeleted',
+          })
+        );
+        storage.clear();
+        screen = 'WELCOME';
+        createStep = 1;
+      }}>Forgot Wallet</Button
+    >
   {:else}
     <div class="create-box">
       {#if createStep == 1}

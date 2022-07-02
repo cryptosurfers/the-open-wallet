@@ -6,9 +6,9 @@ export const setClipboard = (text: string) => {
 };
 
 export const getQueryObject = () => {
-  return Object.fromEntries(
+  return JSON.parse(JSON.stringify(Object.fromEntries(
     new URLSearchParams(location.search)
-  ) as any as BotQuery;
+  ))) as any as BotQuery;
 };
 
 export type BotQuery = {

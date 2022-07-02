@@ -48,6 +48,7 @@
     font-size: 16px;
     letter-spacing: 0px;
     cursor: pointer;
+    border-color: rgb(0, 153, 200);
   }
   .wide {
     width: 100%;
