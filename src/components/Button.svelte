@@ -28,6 +28,7 @@
   style="width: {wide ? '' : width}"
   type="button"
   on:click
+  on:keypress
 >
   <span>
     <slot />
@@ -36,37 +37,39 @@
 
 <style>
   .default {
-    background-color: rgba(125, 125, 125, 0.156);
+    background-color: transparent;
+
     border-radius: 15px;
     border-width: 1px;
     border-color: rgb(255, 255, 255);
     font-weight: 400;
     font-style: normal;
-    color: black;
+    color: var(--tg-theme-text-color);
     font-size: 16px;
     letter-spacing: 0px;
+    cursor: pointer;
+    border-color: rgb(0, 153, 200);
   }
   .wide {
     width: 100%;
   }
   .default:hover {
     border-color: rgb(0, 153, 200);
-    color: rgb(0, 153, 200);
   }
   .accent {
-    background-color: rgb(0, 153, 200);
+    background-color: var(--tg-theme-button-color);
     border-radius: 15px;
     border-width: 0px;
     border-color: rgb(0, 0, 0);
     font-weight: 400;
     font-style: normal;
-    color: rgb(255, 255, 255);
+    color: var(--tg-theme-button-text-color);
     font-size: 16px;
     letter-spacing: 0px;
+    cursor: pointer;
   }
   .accent:hover {
-    background-color: rgb(71, 176, 208);
-    border-color: rgb(255, 255, 255);
+    border-color: rgb(0, 153, 200);
   }
 
   .lg {
