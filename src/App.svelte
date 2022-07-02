@@ -151,6 +151,15 @@
         }}>Change Pin-Code</Button
       >
     {/if}
+    <Button
+      type="default"
+      wide
+      on:click={() => {
+        storage.clear();
+        screen = 'WELCOME';
+        createStep = 1;
+      }}>Delete Wallet</Button
+    >
   {:else}
     <div class="create-box">
       {#if createStep == 1}
@@ -236,7 +245,7 @@
   main {
     text-align: center;
     padding: 1em;
-   
+
     margin: 0 auto;
   }
 
