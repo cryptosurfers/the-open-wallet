@@ -80,7 +80,7 @@
 
 <style>
   .inp {
-    padding: 4px;
+    border-radius: 10.5px;
     background-color: #f8f9fb;
   }
   .inp:hover {

@@ -14,6 +14,7 @@
   <h2>Enter your password</h2>
   <Input bind:value={password} />
   <Button
+   wide
     type="accent"
     on:click={() => {
       try {

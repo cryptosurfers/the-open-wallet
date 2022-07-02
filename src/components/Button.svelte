@@ -46,7 +46,9 @@
     font-size: 16px;
     letter-spacing: 0px;
   }
-
+  .wide {
+    width: 100%;
+  }
   .default:hover {
     border-color: rgb(0, 153, 200);
     color: rgb(0, 153, 200);
