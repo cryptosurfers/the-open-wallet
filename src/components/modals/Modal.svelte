@@ -42,6 +42,7 @@
 
 <style type="text/scss">
   .wrapper {
+    color: black;
     position: fixed;
     top: 0;
     left: 0;

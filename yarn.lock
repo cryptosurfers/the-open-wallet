@@ -3147,10 +3147,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-tonweb@^0.0.49:
-  version "0.0.49"
-  resolved "https://registry.yarnpkg.com/tonweb/-/tonweb-0.0.49.tgz#4ea544f279010d2f2ebb0dd5f74f4bffe0628bd2"
-  integrity sha512-r40YOt1OyPrbD4tdz5GPOXt5dBiZBnq8JCqssAO/C0GpgW/FkDi9GgehauG0fEm+0jBLl7kQtrOvSQ0aDZdkQw==
+tonweb@^0.0.50:
+  version "0.0.50"
+  resolved "https://registry.yarnpkg.com/tonweb/-/tonweb-0.0.50.tgz#7c171e46cf57613e4e463673ee613dfb28127810"
+  integrity sha512-agLW8xuwuGqjmG6HmYapyTYyZ1vYps40+mSLdSogu4vASQBU7Lav4sBxG6OtofPJL6vmFxIHLPYI8Vbq7JBh0w==
   dependencies:
     "@ledgerhq/hw-transport-web-ble" "5.48.0"
     "@ledgerhq/hw-transport-webhid" "5.48.0"

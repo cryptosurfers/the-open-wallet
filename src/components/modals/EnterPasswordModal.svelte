@@ -12,10 +12,24 @@
 
 <Modal {open}>
   <h2>Enter your password</h2>
-  <Input bind:value={password} />
+  <Input
+    on:keypress={(e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmPassword(password);
+      }
+    }}
+    bind:value={password}
+  />
   <Button
-   wide
+    wide
     type="accent"
+    on:keypress={(e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmPassword(password);
+      }
+    }}
     on:click={() => {
       try {
         confirmPassword(password);
