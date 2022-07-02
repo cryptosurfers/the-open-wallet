@@ -176,19 +176,19 @@
     <Button
       type="default"
       wide
-      on:click={() => {
-        tg.sendData(
+      on:click={async () => {
+        await tg.sendData(
           JSON.stringify({
             wallet,
             publicKey: keyPair?.publicKey,
             walletBalance,
-            action: 'walletDeleted',
+            action: 'walletUpdated',
           })
         );
-        storage.clear();
+        //storage.clear();
         screen = 'WELCOME';
         createStep = 1;
-      }}>Forgot Wallet</Button
+      }}>Close</Button
     >
   {:else}
     <div class="create-box">
