@@ -4,13 +4,10 @@
   import { getQueryObject } from '$lib/utils/strings';
 
   import Button from '../Button.svelte';
-  import Input from '../Input.svelte';
+
   import TonWeb from '../../../node_modules/tonweb/dist/tonweb';
 
   import Modal from './Modal.svelte';
-  import App from 'src/App.svelte';
-  import EnterPasswordModal from './EnterPasswordModal.svelte';
-  import { onMount } from 'svelte';
 
   export let open: boolean = false;
   export let myKeyPair: any;
@@ -22,27 +19,17 @@
   const toNano = TonWeb.utils.toNano;
   const tg = window.Telegram.WebApp;
 
-  const WalletClass = tonweb.wallet.all['v3R2'];
-
   let channel: Channel;
   let error = '';
+
+  // create channel instance with data from bot
   async function getChannel() {
     if (myKeyPair?.publicKey && query.action) {
-      console.log('keyPair', myKeyPair);
       const hisPublicKey = query.hisPublicKey
         .slice(1, query.hisPublicKey.length - 1)
         .split(', ')
         .map((int: string) => Number(int));
-      console.log(
-        (
-          await tonweb.wallet
-            .create({
-              publicKey: myKeyPair.publicKey,
-            })
-            .getAddress()
-        ).toString(true, true, true)
-      );
-      console.log(myKeyPair.publicKey);
+
       channel = new Channel(
         new BN(query.channelId!),
         await tonweb.wallet
@@ -69,11 +56,11 @@
         apiKey,
         providerUrl
       );
-
-      console.log('channel', channel);
     }
   }
   let createLoading = false;
+
+  //action for user A
   const createPaymentChannel = async () => {
     try {
       await getChannel();
@@ -89,7 +76,7 @@
         true,
         true
       );
-      console.log(res, channelAddress);
+
       if (res) {
         tg.sendData(
           JSON.stringify({
@@ -108,6 +95,7 @@
 
   let topUpLoading = false;
 
+  // action for user B
   const topUpAndInitPaymentChannel = async () => {
     try {
       await getChannel();
@@ -129,8 +117,6 @@
         true,
         true
       );
-      console.log(initRes);
-      console.log(channelAddress);
 
       if (initRes) {
         tg.sendData(
@@ -148,8 +134,6 @@
       topUpLoading = false;
     }
   };
-
-  $: console.log(query);
 </script>
 
 <Modal {open}>
@@ -176,7 +160,6 @@
     wide
     type="accent"
     on:click={() => {
-      console.log(query.action);
       if (query.action == 'createPaymentChannel') {
         createPaymentChannel();
       } else if (query.action == 'topUpAndInitPaymentChannel') {

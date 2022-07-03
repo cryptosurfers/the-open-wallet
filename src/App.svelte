@@ -22,7 +22,7 @@
   let isActionModalOpen = false;
   let error = '';
   let keyPair: any;
-  let walletContract: any;
+
   let wallet: any;
   let walletBalance: any;
   let screen: 'WELCOME' | 'LOGIN' = 'WELCOME';
@@ -35,12 +35,13 @@
   const apiKey =
     '36a585cf3e99d3c844e448b495c7b2f66bd279d4f4782540e1cf01ffa8833c50';
   const OldTon = window.TonWeb;
-  const walletVersion = 'v3R2';
+
   const ton = new TonWeb(new TonWeb.HttpProvider(providerUrl, { apiKey }));
-  const oldTon = new OldTon(new TonWeb.HttpProvider(providerUrl, { apiKey }));
+
   const tg = window.Telegram.WebApp;
   const nacl = TonWeb.utils.nacl;
-  $: console.log(keyPair);
+
+  //Load User info (e.g balance, ...)
   const loadInfo = async () => {
     const privateKey = await Controller.wordsToPrivateKey(myMnemonicWords);
     keyPair = nacl.sign.keyPair.fromSeed(
@@ -54,7 +55,6 @@
         })
         .getAddress()
     ).toString(true, true, true);
-    console.log(keyPair.publicKey);
 
     const walletInfo = await ton.provider.getWalletInfo(wallet);
     walletBalance = TonWeb.utils.fromNano(
@@ -64,13 +64,12 @@
 
   const onCreateClick = async () => {
     myMnemonicWords = await OldTon.mnemonic.generateMnemonic();
-    console.log(myMnemonicWords);
 
     await loadInfo();
-
-    console.log(password);
   };
-  const onChangePassword = async () => {
+
+  // excrypt mnemonic woth password and save local
+  const onSavePassword = async () => {
     await Controller.saveWords(myMnemonicWords, password);
     password = '';
     screen = 'LOGIN';
@@ -84,6 +83,7 @@
     );
   };
 
+  // decrypt mnemonic with password and load user info
   const onConfirmPassword = async (pass: string) => {
     try {
       myMnemonicWords = await Controller.loadWords(pass);
@@ -91,7 +91,7 @@
       await loadInfo();
 
       passwordModalOpen = false;
-      console.log(keyPair);
+
       const queryObject = getQueryObject() as BotQuery;
       if (
         queryObject.action == 'createPaymentChannel' ||
@@ -105,6 +105,7 @@
     }
   };
 
+  // check if user already has local wallet
   onMount(async () => {
     const words = await storage.getItem('words');
     if (words) {
@@ -144,14 +145,7 @@
       </div>
       {#if isChangePassword}
         <h2>Change Pin-Code</h2>
-        <Input
-          class="input"
-          on:change={async (e) => {
-            console.log(e);
-            console.log(password);
-          }}
-          bind:value={password}
-        />
+        <Input class="input" bind:value={password} />
       {/if}
       {#if isChangePassword}
         <Button
@@ -176,8 +170,25 @@
     <Button
       type="default"
       wide
-      on:click={() => {
-        tg.sendData(
+      on:click={async () => {
+        await tg.sendData(
+          JSON.stringify({
+            wallet,
+            publicKey: keyPair?.publicKey,
+            walletBalance,
+            action: 'walletUpdated',
+          })
+        );
+        //storage.clear();
+        screen = 'WELCOME';
+        createStep = 1;
+      }}>Close</Button
+    >
+    <Button
+      type="default"
+      wide
+      on:click={async () => {
+        await tg.sendData(
           JSON.stringify({
             wallet,
             publicKey: keyPair?.publicKey,
@@ -188,7 +199,7 @@
         storage.clear();
         screen = 'WELCOME';
         createStep = 1;
-      }}>Forgot Wallet</Button
+      }}>Disconnect and Forget Wallet</Button
     >
   {:else}
     <div class="create-box">
@@ -228,13 +239,13 @@
           on:keypress={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              onChangePassword();
+              onSavePassword();
             }
           }}
           class="create"
           bind:value={password}
         />
-        <Button on:click={onChangePassword} type="accent" wide
+        <Button on:click={onSavePassword} type="accent" wide
           >Save pincode</Button
         >
       {/if}
