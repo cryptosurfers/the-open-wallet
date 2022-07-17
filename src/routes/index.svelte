@@ -30,8 +30,8 @@
 
   let createStep: 1 | 2 | 3 = 1
 
-  const providerUrl = 'https://testnet.toncenter.com/api/v2/jsonRPC' // TON HTTP API url. Use this url for testnet
-  const apiKey = '36a585cf3e99d3c844e448b495c7b2f66bd279d4f4782540e1cf01ffa8833c50'
+  const providerUrl = 'https://toncenter.com/api/v2/jsonRPC' // TON HTTP API url. Use this url for testnet
+  const apiKey = '6494499baadce5c74d337dfa79efd3b525e3d94c012aa3f88a3f1a1c6eb4aa7c'
   const tonMnemonic = window.TonWeb.mnemonic
   const ton = new TonWeb(new TonWeb.HttpProvider(providerUrl, { apiKey }))
 
