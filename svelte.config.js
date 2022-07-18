@@ -9,11 +9,11 @@ const config = {
 
   kit: {
     adapter: adapter({
-      fallback: 'index.html'
+      fallback: "index.html"
     }),
 
     prerender: {
-      enabled: false
+      enabled: true
     },
 
     // Override http methods in the Todo forms
