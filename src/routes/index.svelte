@@ -195,6 +195,7 @@
       {#if createStep == 1}
         <h2>Welcome to the open wallet</h2>
         <Button
+          class="mt-2"
           wide
           type="accent"
           on:click={() => {
@@ -202,6 +203,7 @@
           }}>Create Wallet</Button
         >
         <Button
+          class="mt-2"
           wide
           type="accent"
           on:click={() => {
