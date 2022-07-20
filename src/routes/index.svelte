@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
 
   import storage from '$lib/wallet/storage'
+  import TheOpenProtocol from '$lib/webapp/webapp'
   import { Controller } from '$lib/wallet/controller'
   import { getQueryObject, reductId, setClipboard } from '$lib/utils/strings'
   import type { BotQuery } from '$lib/utils/strings'
@@ -66,14 +67,13 @@
     await Controller.saveWords(myMnemonicWords, password)
     password = ''
     screen = 'LOGIN'
-    tg.sendData(
-      JSON.stringify({
-        wallet,
-        publicKey: keyPair.publicKey,
-        walletBalance,
-        action: 'walletCreated'
-      })
-    )
+
+    TheOpenProtocol.createWallet({
+      params: {
+        address: wallet,
+        publicKey: keyPair.publicKey
+      }
+    })
   }
 
   // decrypt mnemonic with password and load user info
@@ -161,15 +161,13 @@
       type="default"
       wide
       on:click={async () => {
-        await tg.sendData(
-          JSON.stringify({
-            wallet,
-            publicKey: keyPair?.publicKey,
-            walletBalance,
-            action: 'walletUpdated'
-          })
-        )
-        //storage.clear();
+        TheOpenProtocol.updateWallet({
+          params: {
+            address: wallet,
+            publicKey: keyPair?.publicKey
+          }
+        })
+
         screen = 'WELCOME'
         createStep = 1
       }}>Close</Button
@@ -178,14 +176,13 @@
       type="default"
       wide
       on:click={async () => {
-        await tg.sendData(
-          JSON.stringify({
-            wallet,
-            publicKey: keyPair?.publicKey,
-            walletBalance,
-            action: 'walletDeleted'
-          })
-        )
+        TheOpenProtocol.deleteWallet({
+          params: {
+            address: wallet,
+            publicKey: keyPair?.publickKey
+          }
+        })
+
         storage.clear()
         screen = 'WELCOME'
         createStep = 1
