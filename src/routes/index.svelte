@@ -13,6 +13,8 @@
   import EnterPasswordModal from '$lib/components/Modals/EnterPasswordModal.svelte'
 
   import TonWeb from 'tonweb'
+  import { walletStore } from '$lib/stores/wallet'
+  import { goto } from '$app/navigation'
 
   export let name: string | string
 
@@ -21,7 +23,6 @@
   let passwordModalOpen = false
   let isActionModalOpen = false
   let error = ''
-  let keyPair: any
 
   let wallet: any
   let walletBalance: any
@@ -31,10 +32,9 @@
 
   let createStep: 1 | 2 | 3 = 1
 
-  const providerUrl = 'https://toncenter.com/api/v2/jsonRPC' // TON HTTP API url. Use this url for testnet
-  const apiKey = '6494499baadce5c74d337dfa79efd3b525e3d94c012aa3f88a3f1a1c6eb4aa7c'
+  $: keyPair = $walletStore.keyPair
+  $: ton = $walletStore.ton
   const tonMnemonic = window.TonWeb.mnemonic
-  const ton = new TonWeb(new TonWeb.HttpProvider(providerUrl, { apiKey }))
 
   const tg = window.Telegram.WebApp
   const nacl = TonWeb.utils.nacl
@@ -42,12 +42,12 @@
   //Load User info (e.g balance, ...)
   const loadInfo = async () => {
     const privateKey = await Controller.wordsToPrivateKey(myMnemonicWords)
-    keyPair = nacl.sign.keyPair.fromSeed(TonWeb.utils.base64ToBytes(privateKey))
+    walletStore.setUserKeyPair(nacl.sign.keyPair.fromSeed(TonWeb.utils.base64ToBytes(privateKey)))
 
     wallet = (
       await ton.wallet
         .create({
-          publicKey: keyPair.publicKey
+          publicKey: keyPair?.publicKey
         })
         .getAddress()
     ).toString(true, true, true)
@@ -67,13 +67,14 @@
     await Controller.saveWords(myMnemonicWords, password)
     password = ''
     screen = 'LOGIN'
-
-    TheOpenProtocol.createWallet({
-      params: {
-        address: wallet,
-        publicKey: keyPair.publicKey
-      }
-    })
+    if (keyPair) {
+      TheOpenProtocol.createWallet({
+        params: {
+          address: wallet,
+          publicKey: keyPair.publicKey
+        }
+      })
+    }
   }
 
   // decrypt mnemonic with password and load user info
@@ -161,12 +162,13 @@
       type="default"
       wide
       on:click={async () => {
-        TheOpenProtocol.updateWallet({
-          params: {
-            address: wallet,
-            publicKey: keyPair?.publicKey
-          }
-        })
+        if (keyPair)
+          TheOpenProtocol.updateWallet({
+            params: {
+              address: wallet,
+              publicKey: keyPair.publicKey
+            }
+          })
 
         screen = 'WELCOME'
         createStep = 1
@@ -179,7 +181,7 @@
         TheOpenProtocol.deleteWallet({
           params: {
             address: wallet,
-            publicKey: keyPair?.publickKey
+            publicKey: keyPair?.publicKey
           }
         })
 
@@ -198,6 +200,13 @@
           on:click={() => {
             createStep++
           }}>Create Wallet</Button
+        >
+        <Button
+          wide
+          type="accent"
+          on:click={() => {
+            goto('./import')
+          }}>Import</Button
         >
       {:else if createStep == 2}
         <h2>To create a wallet need to generate and write down a seed phrase.</h2>
@@ -234,7 +243,7 @@
       {/if}
     </div>
   {/if}
-  <ActionModal {apiKey} {providerUrl} myKeyPair={keyPair} open={isActionModalOpen} />
+  <ActionModal open={isActionModalOpen} />
   <EnterPasswordModal confirmPassword={onConfirmPassword} open={passwordModalOpen} />
 </main>
 

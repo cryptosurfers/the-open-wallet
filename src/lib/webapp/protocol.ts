@@ -35,6 +35,7 @@ export interface Transfer extends WebAppMessage {
 
 export interface RemoveWallet extends WebAppMessage {
   method: WebAppMethod.REMOVE_WALLET
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any
 }
 
@@ -42,7 +43,7 @@ export interface WalletCreated extends WebAppMessage {
   method: WebAppMethod.WALLET_CREATED
   params: {
     address: string
-    publicKey: number[]
+    publicKey: Uint8Array
     version?: string
   }
 }
@@ -51,7 +52,7 @@ export interface WalletUpdated extends WebAppMessage {
   method: WebAppMethod.WALLET_UPDATED
   params: {
     address: string
-    publicKey: number[]
+    publicKey: Uint8Array
     version?: string
   }
 }

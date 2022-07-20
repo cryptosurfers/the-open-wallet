@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Channel } from '$lib/wallet/channels'
-
+  import { walletStore } from '$lib/stores/wallet'
   import { getQueryObject } from '$lib/utils/strings'
 
   import Button from '../Button.svelte'
@@ -10,14 +10,14 @@
   import Modal from './Modal.svelte'
 
   export let open: boolean = false
-  export let myKeyPair: any
-  export let providerUrl: string = ''
-  export let apiKey: string = ''
-  const tonweb = new TonWeb(new TonWeb.HttpProvider(providerUrl, { apiKey }))
+
   const query = getQueryObject()
   const BN = TonWeb.utils.BN
   const toNano = TonWeb.utils.toNano
   const tg = window.Telegram.WebApp
+
+  $: tonweb = $walletStore.ton
+  $: myKeyPair = $walletStore.keyPair
 
   let channel: Channel
   let error = ''
@@ -51,8 +51,8 @@
         query.isA! == 'True',
         myKeyPair,
         hisPublicKey,
-        apiKey,
-        providerUrl
+        $walletStore.apiKey,
+        $walletStore.providerUrl
       )
     }
   }
