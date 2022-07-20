@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "immutable/start-7694e51c.js",
+    "file": "immutable/start-25663a3e.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -37,13 +37,13 @@
     ]
   },
   "src/routes/import.svelte": {
-    "file": "immutable/pages/import.svelte-887674e3.js",
+    "file": "immutable/pages/import.svelte-6bb3220e.js",
     "src": "src/routes/import.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-d6efaadc.js",
-      "_wallet-7f1bb2f7.js",
+      "_wallet-c44284ee.js",
       "_index-a0b22331.js"
     ],
     "css": [
@@ -51,13 +51,13 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "immutable/pages/index.svelte-3e058af5.js",
+    "file": "immutable/pages/index.svelte-878170b1.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-d6efaadc.js",
-      "_wallet-7f1bb2f7.js",
+      "_wallet-c44284ee.js",
       "_singletons-cdeec3fd.js",
       "_index-a0b22331.js"
     ],
@@ -77,8 +77,8 @@
   "_singletons-cdeec3fd.js": {
     "file": "immutable/chunks/singletons-cdeec3fd.js"
   },
-  "_wallet-7f1bb2f7.js": {
-    "file": "immutable/chunks/wallet-7f1bb2f7.js",
+  "_wallet-c44284ee.js": {
+    "file": "immutable/chunks/wallet-c44284ee.js",
     "imports": [
       "_index-d6efaadc.js",
       "_index-a0b22331.js"
@@ -87,20 +87,20 @@
       "immutable/assets/wallet-0e4f3e6f.css"
     ]
   },
-  "src/routes/index.css": {
-    "file": "immutable/assets/index-0d2e5161.css",
-    "src": "src/routes/index.css"
-  },
   "src/routes/__layout.css": {
     "file": "immutable/assets/__layout-faf03c61.css",
     "src": "src/routes/__layout.css"
   },
-  "wallet.css": {
-    "file": "immutable/assets/wallet-0e4f3e6f.css",
-    "src": "wallet.css"
-  },
   "src/routes/import.css": {
     "file": "immutable/assets/import-54fbb5b7.css",
     "src": "src/routes/import.css"
+  },
+  "src/routes/index.css": {
+    "file": "immutable/assets/index-0d2e5161.css",
+    "src": "src/routes/index.css"
+  },
+  "wallet.css": {
+    "file": "immutable/assets/wallet-0e4f3e6f.css",
+    "src": "wallet.css"
   }
 }
