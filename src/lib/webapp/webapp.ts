@@ -16,16 +16,37 @@ class TheOpenProtocol {
     this.webapp = webapp
   }
   createWallet({ params }: Omit<WalletCreated, 'method'>) {
-    this.webapp.sendData(JSON.stringify({ method: WebAppMethod.WALLET_CREATED, params: {
-      ...params,
-      publicKey: binArrayToJson(params.publicKey)
-    } }))
+    this.webapp.sendData(
+      JSON.stringify({
+        method: WebAppMethod.WALLET_CREATED,
+        params: {
+          ...params,
+          publicKey: Array.from(params.publicKey)
+        }
+      })
+    )
   }
   updateWallet({ params }: Omit<WalletUpdated, 'method'>) {
-    this.webapp.sendData(JSON.stringify({ method: WebAppMethod.WALLET_UPDATED, params }))
+    this.webapp.sendData(
+      JSON.stringify({
+        method: WebAppMethod.WALLET_UPDATED,
+        params: {
+          ...params,
+          publicKey: Array.from(params.publicKey)
+        }
+      })
+    )
   }
   deleteWallet({ params }: Omit<WalletRemoved, 'method'>) {
-    this.webapp.sendData(JSON.stringify({ method: WebAppMethod.WALLET_REMOVED, params }))
+    this.webapp.sendData(
+      JSON.stringify({
+        method: WebAppMethod.WALLET_REMOVED,
+        params: {
+          ...params,
+          publicKey: Array.from(params?.publicKey)
+        }
+      })
+    )
   }
 }
 
